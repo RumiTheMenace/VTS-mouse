@@ -374,7 +374,7 @@ namespace RumiVtsController
             var data = new AuthenticationTokenRequestData
             {
                 PluginName = config.PluginName,
-                PluginDeveloper = config.PluginDeveloper
+                PluginDeveloper = "Deer"
             };
 
             var response = await SendRequestAsync("AuthenticationTokenRequest", data, cancellationToken).ConfigureAwait(false);
@@ -408,7 +408,7 @@ namespace RumiVtsController
             var data = new AuthenticationRequestData
             {
                 PluginName = config.PluginName,
-                PluginDeveloper = config.PluginDeveloper,
+                PluginDeveloper = "Deer",
                 AuthenticationToken = token
             };
 

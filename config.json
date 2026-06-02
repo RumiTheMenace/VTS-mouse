@@ -7,7 +7,6 @@
   "vts": {
     "port": 8001,
     "pluginName": "VTSMouse",
-    "pluginDeveloper": "You",
     "connectAttempts": 5,
     "connectRetrySeconds": 5,
     "inject": {

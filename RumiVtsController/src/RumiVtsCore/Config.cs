@@ -54,7 +54,6 @@ namespace RumiVtsController
         {
             public int Port { get; set; } = 8001;
             public string PluginName { get; set; } = "RumiVtsController";
-            public string PluginDeveloper { get; set; } = "Deer";
             public int ConnectAttempts { get; set; } = 3;
             public double ConnectRetrySeconds { get; set; } = 5.0;
             public InjectConfig Inject { get; set; } = new();
