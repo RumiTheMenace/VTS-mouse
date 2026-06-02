@@ -257,6 +257,28 @@ profile. **Update Model Profile** in the tray keeps it in sync as you add hotkey
 
 ---
 
+## 🛠️ Troubleshooting
+
+**I launched VTube Studio and nothing happened**
+
+VTS Mouse is a tray app — it has no window. Check the system tray (bottom right, click the ^ arrow to expand hidden icons) to confirm it's running. Once you find it, right-click and check the **Status** item — if it says disconnected, click **Reconnect**. Once connected, if your model still isn't moving see below.
+
+**Model isn't moving even though I allowed the plugin**
+
+This is the most common setup issue. Allowing the plugin in VTS only lets the app connect — it does not automatically apply the parameters to your model. You need to map the custom parameters to your model's inputs manually:
+
+1. In VTube Studio, open your model's parameter settings
+2. Find the custom parameters the app created (`VTSMouseEyeX`, `VTSMouseHeadX`, etc. — the names from your `config.json`)
+3. Map them to your model's corresponding parameters and set them as **input overrides**, not outputs
+
+If you skip this step the parameters are being injected but the model has no idea what to do with them.
+
+**I have duplicate / leftover parameters from changing param names in config**
+
+VTS keeps every custom parameter the plugin has ever created — changing the names in `config.json` creates new params but leaves the old ones behind. To clean up: remove the VTSMouse plugin entry from VTS (this auto-deletes all parameters it created), then reconnect the app — it will only create the params currently in your config.
+
+---
+
 ## 📝 Notes
 
 - **Resource usage** — ~0.1–0.2% CPU (peak ~0.5%), ~35 MB RAM on a Ryzen 9 9900X.

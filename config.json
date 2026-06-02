@@ -96,17 +96,17 @@
     }
   },
   "eye": {
-    "paramX": "EyeX",
-    "paramY": "EyeY",
+    "paramX": "VTSMouseEyeX",
+    "paramY": "VTSMouseEyeY",
     "weight": 1,
     "scale": 1.1,
     "scaleX": 1.5,
     "scaleY": 2.5
   },
   "head": {
-    "paramX": "HeadX",
-    "paramY": "HeadY",
-    "paramZ": "HeadZ",
+    "paramX": "VTSMouseHeadX",
+    "paramY": "VTSMouseHeadY",
+    "paramZ": "VTSMouseHeadZ",
     "weight": 1,
     "weightZ": 1,
     "speedRange": 0.15,
@@ -127,9 +127,9 @@
     }
   },
   "body": {
-    "paramX": "BodyX",
-    "paramY": "BodyY",
-    "paramZ": "BodyZ",
+    "paramX": "VTSMouseBodyX",
+    "paramY": "VTSMouseBodyY",
+    "paramZ": "VTSMouseBodyZ",
     "weight": 1,
     "weightZ": 1,
     "speedRange": 0.15,
@@ -152,8 +152,8 @@
   "face": {
     "blink": {
       "enabled": true,
-      "paramLeft": "EyeBlinkL",
-      "paramRight": "EyeBlinkR",
+      "paramLeft": "VTSMouseEyeBlinkL",
+      "paramRight": "VTSMouseEyeBlinkR",
       "weight": 1,
       "minIntervalSeconds": 2.5,
       "maxIntervalSeconds": 6,
@@ -170,8 +170,8 @@
     },
     "smile": {
       "enabled": true,
-      "paramLeft": "EyeSmileL",
-      "paramRight": "EyeSmileR",
+      "paramLeft": "VTSMouseEyeSmileL",
+      "paramRight": "VTSMouseEyeSmileR",
       "weight": 1,
       "durationSeconds": 1.5,
       "cooldownSeconds": 1,

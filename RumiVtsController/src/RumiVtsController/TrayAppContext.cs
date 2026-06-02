@@ -2407,7 +2407,7 @@ namespace RumiVtsController
             if (string.IsNullOrEmpty(_config.Expression.AuthToken))
             {
                 const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-                var bytes = System.Security.Cryptography.RandomNumberGenerator.GetBytes(6);
+                var bytes = System.Security.Cryptography.RandomNumberGenerator.GetBytes(24);
                 _config.Expression.AuthToken = new string(bytes.Select(b => chars[b % chars.Length]).ToArray());
                 _config.Save(_configPath);
             }
