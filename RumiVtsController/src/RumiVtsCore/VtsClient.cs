@@ -373,7 +373,7 @@ namespace RumiVtsController
         {
             var data = new AuthenticationTokenRequestData
             {
-                PluginName = config.PluginName,
+                PluginName = "VTSMouse",
                 PluginDeveloper = "Deer"
             };
 
@@ -407,7 +407,7 @@ namespace RumiVtsController
         {
             var data = new AuthenticationRequestData
             {
-                PluginName = config.PluginName,
+                PluginName = "VTSMouse",
                 PluginDeveloper = "Deer",
                 AuthenticationToken = token
             };

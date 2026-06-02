@@ -130,22 +130,21 @@ Add `durationSeconds` to auto-cancel after a delay, and `cooldownSeconds` to thr
 
 Enable in config: `"expression": { "enabled": true, "port": 5100 }`
 
-> **Security**: the server only accepts connections from local network ranges (10.x, 172.16–31.x, 192.168.x) and Tailscale (100.64–127.x). Public internet connections are dropped immediately — no auth needed because nothing from outside your LAN can reach it.
+> **Security**: on first launch a random token is auto-generated and written to `config.json` — open it to find it. Include it in every message as `"token"` or the message is dropped. Set `expression.bindAddress` to the local IP of the interface to listen on — defaults to `127.0.0.1` (loopback, local machine only). Set it to your Tailscale IP to accept connections over Tailscale, or your LAN IP for local network access. Token travels in plaintext — use a VPN on untrusted networks.
 
-Send a newline-terminated string to `host:5100` from any machine on your network:
-```
-blush\n
-```
-or as JSON with optional duration:
+Send a newline-terminated JSON object to `host:port`:
 ```json
-{"action": "blush", "durationSeconds": 3.0}
+{"token": "abc123", "action": "blush"}
+{"token": "abc123", "action": "blush", "durationSeconds": 3.0}
+{"token": "abc123", "actions": ["blush", "star"]}
+{"token": "abc123", "trigger": "onExpression.blush"}
 ```
 
-**Built-in actions:** `blink` `winkleft` `winkright` `smile` `halfsmile` `sleep` `afk` `wake` `dizzy` `stopdizzy`
+The `action` value matches against the `expressions` list on each hotkey in your active profile. If nothing matches it is silently dropped — the tray shows `Expression 'x' had no matching hotkeys.` Use **F3** to auto-populate your profile, then add names to the `expressions` list on each hotkey you want to trigger remotely.
 
-> ⚠️ `sleep` and `afk` are indefinite — the model stays asleep until `wake` is sent or a `resetTrigger` fires. If you trigger sleep via TCP with no reset path configured, the model will stay stuck sleeping. Always pair indefinite expressions with a reset trigger or a corresponding TCP `wake` call.
+**Built-in actions** (no profile entry needed): `blink` `winkleft` `winkright` `smile` `halfsmile` `sleep` `afk` `wake` `dizzy` `stopdizzy`
 
-**Custom expressions** come from the `expressions` list on each hotkey in your profile.
+> ⚠️ `sleep` and `afk` are indefinite — stays asleep until `wake` is sent or a `resetTrigger` fires. Always pair with a reset path.
 
 A minimal Python integration example is included in `send_emote.py`. Edit `HOST` to
 point at the machine running VTS Mouse and use it as a template for your own bot,

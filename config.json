@@ -2,11 +2,12 @@
   "enabled": true,
   "expression": {
     "enabled": false,
-    "port": 5100
+    "port": 5100,
+    "authToken": "",
+    "bindAddress": "127.0.0.1"
   },
   "vts": {
     "port": 8001,
-    "pluginName": "VTSMouse",
     "connectAttempts": 5,
     "connectRetrySeconds": 5,
     "inject": {

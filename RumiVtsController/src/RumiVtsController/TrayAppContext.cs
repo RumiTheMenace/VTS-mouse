@@ -2404,23 +2404,21 @@ namespace RumiVtsController
                 return;
             }
 
+            if (string.IsNullOrEmpty(_config.Expression.AuthToken))
+            {
+                const string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                var bytes = System.Security.Cryptography.RandomNumberGenerator.GetBytes(6);
+                _config.Expression.AuthToken = new string(bytes.Select(b => chars[b % chars.Length]).ToArray());
+                _config.Save(_configPath);
+            }
+
             _expressionPipeTask = Task.Run(() => ExpressionTcpLoopAsync(_cts.Token));
         }
 
-        private static bool IsLocalAddress(IPAddress addr)
+private async Task ExpressionTcpLoopAsync(CancellationToken token)
         {
-            if (IPAddress.IsLoopback(addr)) return true;
-            if (addr.AddressFamily != System.Net.Sockets.AddressFamily.InterNetwork) return false;
-            var b = addr.GetAddressBytes();
-            return b[0] == 10
-                || (b[0] == 172 && b[1] >= 16 && b[1] <= 31)
-                || (b[0] == 192 && b[1] == 168)
-                || (b[0] == 100 && b[1] >= 64 && b[1] <= 127); // CGNAT / Tailscale
-        }
-
-        private async Task ExpressionTcpLoopAsync(CancellationToken token)
-        {
-            var listener = new TcpListener(IPAddress.Any, _config.Expression.Port);
+            var bindAddress = IPAddress.TryParse(_config.Expression.BindAddress, out var parsed) ? parsed : IPAddress.Any;
+            var listener = new TcpListener(bindAddress, _config.Expression.Port);
             listener.Start();
             try
             {
@@ -2430,44 +2428,28 @@ namespace RumiVtsController
                     {
                         using var client = await listener.AcceptTcpClientAsync(token).ConfigureAwait(false);
 
-                        var remote = (client.Client.RemoteEndPoint as IPEndPoint)?.Address;
-                        if (remote == null || !IsLocalAddress(remote))
-                        {
-                            client.Close();
-                            continue;
-                        }
-
                         client.ReceiveTimeout = 30_000;
                         using var reader = new StreamReader(client.GetStream());
+                        var authToken = _config.Expression.AuthToken;
+
                         while (!token.IsCancellationRequested)
                         {
                             var line = await reader.ReadLineAsync(token).ConfigureAwait(false);
-                            if (line == null)
-                            {
-                                break;
-                            }
+                            if (line == null) break;
+                            if (line.Length > 4096) break;
+                            if (string.IsNullOrWhiteSpace(line)) continue;
 
-                            if (line.Length > 4096)
+                            if (!TryParseExpressionRequest(line, authToken, out var actions, out var durationOverride))
                             {
-                                break;
-                            }
-
-                            if (string.IsNullOrWhiteSpace(line))
-                            {
+                                if (!string.IsNullOrEmpty(authToken)) break; // bad token — close
                                 continue;
                             }
 
-                            if (TryParseExpressionRequest(line, out var actions, out var durationOverride))
+                            foreach (var actionName in actions)
                             {
-                                foreach (var actionName in actions)
-                                {
-                                    var rumiAction = MapToRumiAction(actionName);
-                                    if (rumiAction != null && TryEnqueue(rumiAction))
-                                    {
-                                        continue;
-                                    }
-                                    _ = TriggerExpressionAsync(actionName, durationOverride);
-                                }
+                                var rumiAction = MapToRumiAction(actionName);
+                                if (rumiAction != null && TryEnqueue(rumiAction)) continue;
+                                _ = TriggerExpressionAsync(actionName, durationOverride);
                             }
                         }
                     }
@@ -2538,64 +2520,48 @@ namespace RumiVtsController
             };
         }
 
-        private bool TryParseExpressionRequest(string payload, out List<string> actions, out double? durationOverride)
+        private static readonly JsonSerializerOptions ExpressionJsonOptions = new() { PropertyNameCaseInsensitive = true };
+
+        private bool TryParseExpressionRequest(string payload, string authToken, out List<string> actions, out double? durationOverride)
         {
             actions = new List<string>();
             durationOverride = null;
-            string? parsedAction = null;
-            if (payload.TrimStart().StartsWith("{", StringComparison.Ordinal))
-            {
-                try
-                {
-                    var req = JsonSerializer.Deserialize<ExpressionRequest>(payload, new JsonSerializerOptions
-                    {
-                        PropertyNameCaseInsensitive = true
-                    });
-                    if (req?.DurationSeconds is double duration && duration > 0)
-                    {
-                        durationOverride = duration;
-                    }
 
-                    if (req?.Actions != null && req.Actions.Count > 0)
-                    {
-                        foreach (var entry in req.Actions)
-                        {
-                            if (!string.IsNullOrWhiteSpace(entry))
-                            {
-                                actions.Add(entry.Trim());
-                            }
-                        }
-                    }
-                    else
-                    {
-                        parsedAction = req?.Action;
-                        if (string.IsNullOrWhiteSpace(parsedAction) && !string.IsNullOrWhiteSpace(req?.Trigger))
-                        {
-                            parsedAction = ExtractExpressionAction(req!.Trigger!);
-                        }
-                    }
-                }
-                catch
-                {
-                    return false;
-                }
-            }
-            else
+            ExpressionRequest? req;
+            try
             {
-                parsedAction = payload.Trim();
+                req = JsonSerializer.Deserialize<ExpressionRequest>(payload, ExpressionJsonOptions);
             }
-
-            if (!string.IsNullOrWhiteSpace(parsedAction))
-            {
-                actions.Add(parsedAction.Trim());
-            }
-
-            if (actions.Count == 0)
+            catch
             {
                 return false;
             }
 
-            return true;
+            if (req == null) return false;
+
+            // Token check — if auth is configured, every message must include the matching token
+            if (!string.IsNullOrEmpty(authToken) && req.Token != authToken)
+                return false;
+
+            if (req.DurationSeconds is double duration && duration > 0)
+                durationOverride = duration;
+
+            if (req.Actions != null && req.Actions.Count > 0)
+            {
+                foreach (var entry in req.Actions)
+                    if (!string.IsNullOrWhiteSpace(entry))
+                        actions.Add(entry.Trim());
+            }
+            else
+            {
+                var parsedAction = req.Action;
+                if (string.IsNullOrWhiteSpace(parsedAction) && !string.IsNullOrWhiteSpace(req.Trigger))
+                    parsedAction = ExtractExpressionAction(req.Trigger!);
+                if (!string.IsNullOrWhiteSpace(parsedAction))
+                    actions.Add(parsedAction!.Trim());
+            }
+
+            return actions.Count > 0;
         }
 
         private static string? ExtractExpressionAction(string trigger)
@@ -2628,6 +2594,7 @@ namespace RumiVtsController
 
         private sealed class ExpressionRequest
         {
+            public string? Token { get; set; }
             public string? Action { get; set; }
             public List<string>? Actions { get; set; }
             public string? Trigger { get; set; }

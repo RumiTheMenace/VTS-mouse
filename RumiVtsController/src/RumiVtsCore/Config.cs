@@ -53,7 +53,6 @@ namespace RumiVtsController
         public sealed class VtsConfig
         {
             public int Port { get; set; } = 8001;
-            public string PluginName { get; set; } = "RumiVtsController";
             public int ConnectAttempts { get; set; } = 3;
             public double ConnectRetrySeconds { get; set; } = 5.0;
             public InjectConfig Inject { get; set; } = new();
@@ -357,6 +356,8 @@ namespace RumiVtsController
         {
             public bool Enabled { get; set; } = false;
             public int Port { get; set; } = 5100;
+            public string AuthToken { get; set; } = "";
+            public string BindAddress { get; set; } = "127.0.0.1";
         }
 
         public sealed class DebugConfig

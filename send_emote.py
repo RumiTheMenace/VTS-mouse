@@ -31,15 +31,17 @@ import socket
 
 HOST = "127.0.0.1"  # IP or hostname of the PC running RumiVtsController
 PORT = 5100
+TOKEN = ""          # must match expression.authToken in config.json — leave empty if unset
 
 
 def send_emote(action: str, duration: float | None = None) -> None:
+    msg: dict = {"action": action}
+    if TOKEN:
+        msg["token"] = TOKEN
     if duration is not None:
-        payload = json.dumps({"action": action, "durationSeconds": duration})
-    else:
-        payload = action  # plain string — simplest form
+        msg["durationSeconds"] = duration
 
-    data = (payload + "\n").encode("utf-8")
+    data = (json.dumps(msg) + "\n").encode("utf-8")
 
     try:
         with socket.create_connection((HOST, PORT), timeout=5) as sock:
