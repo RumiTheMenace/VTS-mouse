@@ -130,6 +130,8 @@ Add `durationSeconds` to auto-cancel after a delay, and `cooldownSeconds` to thr
 
 Enable in config: `"expression": { "enabled": true, "port": 5100 }`
 
+> **Security**: the server only accepts connections from local network ranges (10.x, 172.16–31.x, 192.168.x) and Tailscale (100.64–127.x). Public internet connections are dropped immediately — no auth needed because nothing from outside your LAN can reach it.
+
 Send a newline-terminated string to `host:5100` from any machine on your network:
 ```
 blush\n
