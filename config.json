@@ -1,0 +1,276 @@
+{
+  "enabled": true,
+  "expression": {
+    "enabled": false,
+    "port": 5100
+  },
+  "vts": {
+    "port": 8001,
+    "pluginName": "VTSMouse",
+    "pluginDeveloper": "You",
+    "connectAttempts": 5,
+    "connectRetrySeconds": 5,
+    "inject": {
+      "hz": 60
+    },
+    "debug": {
+      "trackingToggleHotkey": "F1",
+      "freezeTrackingHotkey": "F4",
+      "calibrateHotkey": "F2",
+      "dumpHotkey": "F3"
+    },
+    "smart": {
+      "enabled": true,
+      "idleAfterSeconds": 5,
+      "keepAliveHz": 12,
+      "idleComputeHz": 24,
+      "movementThresholdPx": 0.5,
+      "afkAfterSeconds": 60
+    }
+  },
+  "model": {
+    "useModelCenter": true,
+    "hz": 2,
+    "offsetY": 0,
+    "outlineRefHeight": 0,
+    "mapping": {
+      "rangePxX": 540,
+      "rangePxY": 960,
+      "deadzone": 0.002,
+      "clampRadius": 0.9,
+      "useVirtualDesktop": true,
+      "usePrimaryMonitor": false,
+      "worldRelative": {
+        "enabled": false,
+        "sensitivity": 1,
+        "mainMonitorIndex": 0,
+        "mainMonitorWeight": 0.8,
+        "otherMonitorWeight": 0.5,
+        "weightLerpSpeed": 0.05
+      }
+    },
+    "hotkeys": {
+      "centerRadiusPx": 160,
+      "hoverExitRadiusScale": 1.2,
+      "hoverDwellSeconds": 0.15,
+      "outlineRadiusScale": 0.5,
+      "dizzyThresholdPx": 450
+    },
+    "flick": {
+      "enabled": true,
+      "thresholdPx": 50,
+      "averageAlpha": 0.25,
+      "oscillationsRequired": 3,
+      "oscillationWindowSeconds": 5
+    },
+    "dizzy": {
+      "blendTracking": true
+    },
+    "bodyBreath": {
+      "enabled": false,
+      "hz": 0.12,
+      "ampX": 0.01,
+      "ampY": 0.005
+    },
+    "afk": {},
+    "deltaMode": {
+      "rawInput": {
+        "enabled": true,
+        "preferRawDelta": true
+      },
+      "enabled": true,
+      "useFullscreen": true,
+      "useWindowedFocus": true,
+      "centerRadiusPx": 8,
+      "centerHoldSeconds": 1.5,
+      "hiddenCursorDelaySeconds": 3.0,
+      "scale": 1,
+      "returnSpeed": 0.18,
+      "maxOffset": 1,
+      "movementThresholdPx": 0.5,
+      "smoothing": 0.35,
+      "springHoldFactor": 0.6,
+      "eyeOffsetScale": 1.35,
+      "radiusOverridePx": 320,
+      "radiusWindowTitles": []
+    }
+  },
+  "eye": {
+    "paramX": "EyeX",
+    "paramY": "EyeY",
+    "weight": 1,
+    "scale": 1.1,
+    "scaleX": 1.5,
+    "scaleY": 2.5
+  },
+  "head": {
+    "paramX": "HeadX",
+    "paramY": "HeadY",
+    "paramZ": "HeadZ",
+    "weight": 1,
+    "weightZ": 1,
+    "speedRange": 0.15,
+    "distanceRange": 0.35,
+    "minAlpha": 0.015,
+    "maxAlpha": 0.28,
+    "z": {
+      "rangePx": 158,
+      "scale": 0.44,
+      "dyScale": 0.1,
+      "smoothing": 0.11,
+      "returnSpeed": 0.005,
+      "movementThresholdPx": 0.5,
+      "usePrimaryCenter": false,
+      "holdPeak": true,
+      "flipSpeed": 0.05,
+      "invertZ": false
+    }
+  },
+  "body": {
+    "paramX": "BodyX",
+    "paramY": "BodyY",
+    "paramZ": "BodyZ",
+    "weight": 1,
+    "weightZ": 1,
+    "speedRange": 0.15,
+    "distanceRange": 0.35,
+    "minAlpha": 0.015,
+    "maxAlpha": 0.28,
+    "z": {
+      "rangePx": 120,
+      "scale": 0.6,
+      "dyScale": 0.15,
+      "smoothing": 0.15,
+      "returnSpeed": 0.005,
+      "movementThresholdPx": 0.5,
+      "usePrimaryCenter": false,
+      "holdPeak": true,
+      "flipSpeed": 0.06,
+      "invertZ": false
+    }
+  },
+  "face": {
+    "blink": {
+      "enabled": true,
+      "paramLeft": "EyeBlinkL",
+      "paramRight": "EyeBlinkR",
+      "weight": 1,
+      "minIntervalSeconds": 2.5,
+      "maxIntervalSeconds": 6,
+      "intervalBias": 2,
+      "durationSeconds": 0.12,
+      "cooldownSeconds": 0.2,
+      "attentionScaleMultiplier": 2,
+      "motionThresholdPx": 80,
+      "motionChance": 0.2,
+      "attackSeconds": 0.04,
+      "releaseSeconds": 0.06,
+      "shockScale": 0,
+      "shockSeconds": 0.03
+    },
+    "smile": {
+      "enabled": true,
+      "paramLeft": "EyeSmileL",
+      "paramRight": "EyeSmileR",
+      "weight": 1,
+      "durationSeconds": 1.5,
+      "cooldownSeconds": 1,
+      "triggers": []
+    },
+    "wink": {
+      "enabled": true,
+      "weight": 1,
+      "durationSeconds": 0.25,
+      "cooldownSeconds": 1,
+      "rightChance": 0.5,
+      "smileScale": 0,
+      "attackSeconds": 0.04,
+      "releaseSeconds": 0.06,
+      "shockScale": 0,
+      "shockSeconds": 0.03,
+      "triggers": []
+    }
+  },
+  "animations": {
+    "enabled": true,
+    "bounceDvd": {
+      "enabled": false,
+      "exclusive": false,
+      "stackable": true,
+      "trigger": "onSmartMode",
+      "speedX": 0.008,
+      "speedY": 0.008,
+      "spinSpeed": 45,
+      "bounceScale": -98,
+      "resetScale": -80
+    },
+    "sleep": {
+      "enabled": true,
+      "exclusive": true,
+      "wakeOnEnd": true,
+      "sleep": {
+        "fadeInSeconds": 2,
+        "head": { "tiltX": 0.5, "tiltY": -1, "tiltZ": -2 },
+        "eye": { "smile": 1 },
+        "body": { "offsetY": -0.8, "offsetZ": -1 }
+      },
+      "breathing": {
+        "exhaleRatio": 0.6,
+        "amplitude": 0.08,
+        "hz": 0.2
+      }
+    },
+    "wake": {
+      "enabled": true,
+      "exclusive": true,
+      "easeOutSeconds": 1,
+      "wakeJolt": {
+        "enabled": true,
+        "jumpBodyY": 0.8,
+        "jumpSeconds": 0.25,
+        "holdSeconds": 1,
+        "headTiltX": -0.3,
+        "headTiltY": 0,
+        "headTiltZ": 0.2,
+        "eyeX": 0.6,
+        "eyeY": 0.4,
+        "composeSeconds": 1,
+        "composedHeadX": 0,
+        "composedHeadY": -0.8,
+        "composedHeadZ": 0,
+        "composedBlink": 1,
+        "breatheSeconds": 1
+      }
+    },
+    "dizzy": {
+      "enabled": true,
+      "exclusive": true,
+      "dizzyIn": {
+        "spinUpSeconds": 1,
+        "blendAlpha": 0.6,
+        "eyeRadius": 0.45,
+        "eyeSpinHz": 0.9,
+        "headRadius": 0.28,
+        "headSpinHz": 0.45,
+        "bodyXYAmplitudeX": 0.02,
+        "bodyXYAmplitudeY": 0.015,
+        "bodyXYSpinHz": 0.2,
+        "bodyMin": -0.2,
+        "bodyMax": 0.2,
+        "bodySpinHz": 0.15
+      },
+      "dizzyOut": {
+        "easeOutSeconds": 1
+      }
+    }
+  },
+  "profiles": {},
+  "errorHandling": {
+    "throttleSeconds": 1,
+    "ignoreErrorIds": [
+      50, 51, 153, 154, 200, 201, 203, 205, 250,
+      300, 550, 652, 700, 753, 759, 760, 800, 903,
+      1000, 1001, 1101, 1200, 1255
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+# Build output
+bin/
+obj/
+publish/
+
+# VS Code
+.vscode/
+
+# Claude Code
+.claude/
+
+# Auth token — never commit
+.env
+
+# Runtime state — generated, not source
+gaze_bias.json
+
+# Personal config — lives next to the exe, not committed
+RumiVtsController/config.json
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Temp / scratch
+temp/
+ROADMAP.md
+README (vtube studio).md
