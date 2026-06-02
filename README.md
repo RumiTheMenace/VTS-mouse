@@ -28,17 +28,21 @@ expressive, reactive models without a webcam or face tracker.
 
 ## 🚀 Quick Start
 
-### Requirements
-- Windows 10/11
-- [VTube Studio](https://store.steampowered.com/app/1325860/VTube_Studio/) with **Public API enabled**
-- [.NET 10 Runtime](https://dotnet.microsoft.com/download/dotnet/10.0) (Windows)
-- A VTS model with custom eye/head/body parameters
+### Using the prebuilt release
+1. Download `vts-mouse.exe` and `config.json` from the [latest release](../../releases/latest)
+2. Drop both into a dedicated folder
+3. Enable the VTube Studio Public API: **Settings → General → Start API (Port 8001)**
+4. Run `vts-mouse.exe` — accept the VTS permission prompt on first run
+5. The app sits in your system tray. Right-click for options.
 
-### Setup
-1. Enable the VTube Studio Public API: **Settings → General → Start API (Port 8001)**
-2. Build: `dotnet build`
-3. Run `vts-mouse.exe` — accept the VTS permission prompt on first run
-4. The app sits in your system tray. Right-click for options.
+No .NET install required — the runtime is bundled in the exe.
+
+### Building from source
+Requires [.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0) and Windows.
+```
+dotnet publish RumiVtsController/RumiVtsController.sln -c Release -r win-x64 --self-contained true
+```
+Output: `RumiVtsController/src/RumiVtsController/bin/Release/net10.0-windows/win-x64/publish/vts-mouse.exe`
 
 ### Auto-launch with VTube Studio (Steam)
 The app detects when VTS closes and exits automatically. Add it to your Steam launch options so it starts and stops with VTS automatically:
