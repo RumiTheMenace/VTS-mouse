@@ -1,3 +1,6 @@
+
+https://github.com/user-attachments/assets/056ee320-3fa4-46e9-af4b-7ee9a6ddfc9a
+
 # 🖱️ VTS Mouse — Mouse-Driven VTube Studio Controller
 
 > **No face tracking hardware required.**
@@ -223,7 +226,7 @@ With `stackable: true`, the bounce keeps running even after sleep's `exclusive: 
 }
 ```
 
-Press **F3** while VTS is focused to auto-dump the current model's hotkeys into a
+Press **F3** (or use **Update Model Profile** in the tray) while VTS is focused to populate or sync the current model's hotkeys into a
 profile. **Update Model Profile** in the tray keeps it in sync as you add hotkeys in VTS.
 
 ### Minimal config example
