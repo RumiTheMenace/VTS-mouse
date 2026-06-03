@@ -613,7 +613,7 @@ namespace RumiVtsController
             return results;
         }
 
-        private bool ApplyLlmAnimation(string action, IReadOnlyCollection<Config.HotkeyConfig> hotkeys, double? durationOverride)
+        private bool ApplyBuiltInAnimation(string action, IReadOnlyCollection<Config.HotkeyConfig> hotkeys, double? durationOverride)
         {
             if (string.IsNullOrWhiteSpace(action))
             {
@@ -1111,15 +1111,7 @@ namespace RumiVtsController
                     return;
                 }
 
-                var hotkeys = await _vtsClient.TryGetHotkeysInCurrentModelAsync(_cts.Token).ConfigureAwait(true);
-                if (hotkeys == null)
-                {
-                    SetStatus("Hotkey dump failed: VTS does not support HotkeysInCurrentModelRequest.");
-                    return;
-                }
-
-                await EnsureProfileForCurrentModelAsync(hotkeys).ConfigureAwait(true);
-                SetStatus("Hotkey profile updated.");
+                await UpdateProfileFromVtsAsync().ConfigureAwait(true);
             }
             catch (Exception ex)
             {
@@ -2479,7 +2471,7 @@ private async Task ExpressionTcpLoopAsync(CancellationToken token)
             }
 
             var hotkeys = FindHotkeysByExpression(action);
-            var animationApplied = ApplyLlmAnimation(action, hotkeys, durationOverride);
+            var animationApplied = ApplyBuiltInAnimation(action, hotkeys, durationOverride);
             if (hotkeys.Count == 0 && !animationApplied)
             {
                 SetStatus($"Expression '{action}' had no matching hotkeys.");

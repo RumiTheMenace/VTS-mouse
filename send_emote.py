@@ -15,8 +15,8 @@ Examples:
     python send_emote.py smile
 
 Protocol:
-    Send a newline-terminated string over TCP. Accepts a plain action name or
-    a JSON object with "action" and optional "durationSeconds".
+    Send a newline-terminated JSON object over TCP with "action" and optional
+    "token" (if authToken is set in config) and "durationSeconds".
 
 Built-in actions (handled natively):
     blink, winkleft, winkright, smile, halfsmile
@@ -31,7 +31,7 @@ import socket
 
 HOST = "127.0.0.1"  # IP or hostname of the PC running RumiVtsController
 PORT = 5100
-TOKEN = ""          # must match expression.authToken in config.json — leave empty if unset
+TOKEN = ""          # find your auto-generated token in config.json under expression.authToken
 
 
 def send_emote(action: str, duration: float | None = None) -> None:
@@ -46,7 +46,7 @@ def send_emote(action: str, duration: float | None = None) -> None:
     try:
         with socket.create_connection((HOST, PORT), timeout=5) as sock:
             sock.sendall(data)
-        print(f"[OK] Sent: {payload!r}")
+        print(f"[OK] Sent: {json.dumps(msg)!r}")
     except ConnectionRefusedError:
         print(f"[ERROR] Connection refused at {HOST}:{PORT}")
         print(f"  - Is RumiVtsController running?")
