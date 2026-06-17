@@ -942,21 +942,19 @@ namespace RumiVtsController
                     var baseTop = trackingBounds.Top;
                     if (!preferPrimarySpace)
                     {
-                        if (snapHasWindowSize)
+                        if (snapHasWindowBounds)
+                        {
+                            // Always use Win32 client bounds for position and size so that
+                            // baseCenterX is in the same pixel space as the cursor coordinates.
+                            baseLeft = snapWindowLeft;
+                            baseTop = snapWindowTop;
+                            windowWidth = snapWindowClientWidth;
+                            windowHeight = snapWindowClientHeight;
+                        }
+                        else if (snapHasWindowSize)
                         {
                             windowWidth = snapWindowWidth;
                             windowHeight = snapWindowHeight;
-                        }
-
-                        if (snapHasWindowBounds)
-                        {
-                            baseLeft = snapWindowLeft;
-                            baseTop = snapWindowTop;
-                            if (!snapHasWindowSize)
-                            {
-                                windowWidth = snapWindowClientWidth;
-                                windowHeight = snapWindowClientHeight;
-                            }
                         }
                     }
                     if (windowWidth <= 0 || windowHeight <= 0)
@@ -969,21 +967,17 @@ namespace RumiVtsController
                     var absoluteWindowHeight = trackingBounds.Height;
                     var absoluteBaseLeft = trackingBounds.Left;
                     var absoluteBaseTop = trackingBounds.Top;
-                    if (snapHasWindowSize)
-                    {
-                        absoluteWindowWidth = snapWindowWidth;
-                        absoluteWindowHeight = snapWindowHeight;
-                    }
-
                     if (snapHasWindowBounds)
                     {
                         absoluteBaseLeft = snapWindowLeft;
                         absoluteBaseTop = snapWindowTop;
-                        if (!snapHasWindowSize)
-                        {
-                            absoluteWindowWidth = snapWindowClientWidth;
-                            absoluteWindowHeight = snapWindowClientHeight;
-                        }
+                        absoluteWindowWidth = snapWindowClientWidth;
+                        absoluteWindowHeight = snapWindowClientHeight;
+                    }
+                    else if (snapHasWindowSize)
+                    {
+                        absoluteWindowWidth = snapWindowWidth;
+                        absoluteWindowHeight = snapWindowHeight;
                     }
 
                     if (absoluteWindowWidth <= 0 || absoluteWindowHeight <= 0)
@@ -1022,11 +1016,12 @@ namespace RumiVtsController
                         }
                         if (hasModelPosition)
                         {
-                            var modelOffsetPxX = modelOffsetX * (vtsWidth / 2.0f);
+                            var vtsMinHalf = Math.Min(vtsWidth, vtsHeight) / 2.0f;
+                            var modelOffsetPxX = modelOffsetX * vtsMinHalf;
                             var modelOffsetPxY = -modelOffsetY * (vtsHeight / 2.0f);
                             if (preferPrimarySpace)
                             {
-                                var scaleX = primaryBounds.Width / Math.Max(1.0f, vtsWidth);
+                                var scaleX = primaryBounds.Height / Math.Max(1.0f, vtsHeight);
                                 var scaleY = primaryBounds.Height / Math.Max(1.0f, vtsHeight);
                                 modelOffsetPxX *= scaleX;
                                 modelOffsetPxY *= scaleY;
@@ -1042,7 +1037,8 @@ namespace RumiVtsController
 
                         if (hasModelPosition)
                         {
-                            var modelOffsetPxX = modelOffsetX * (vtsWidth / 2.0f);
+                            var vtsMinHalf = Math.Min(vtsWidth, vtsHeight) / 2.0f;
+                            var modelOffsetPxX = modelOffsetX * vtsMinHalf;
                             var modelOffsetPxY = -modelOffsetY * (vtsHeight / 2.0f);
                             worldRelativeCenterX += modelOffsetPxX;
                             worldRelativeCenterY += modelOffsetPxY + (offsetY * scale);
@@ -3914,12 +3910,13 @@ namespace RumiVtsController
             var outlineScale = Math.Max(0.0f, _config.Model.Hotkeys.OutlineRadiusScale);
             if (outlineScale > 0.0f && hasOutlineCenter && hasOutlineHeight)
             {
-                var outlineOffsetX = outlineCenterX * (vtsWidth / 2.0f);
+                var vtsMinHalf = Math.Min(vtsWidth, vtsHeight) / 2.0f;
+                var outlineOffsetX = outlineCenterX * vtsMinHalf;
                 var outlineOffsetY = -outlineCenterY * (vtsHeight / 2.0f);
                 var radiusPx = outlineHeight * (vtsHeight / 2.0f) * outlineScale;
                 if (preferPrimarySpace)
                 {
-                    var scaleX = primaryBounds.Width / Math.Max(1.0f, vtsWidth);
+                    var scaleX = primaryBounds.Height / Math.Max(1.0f, vtsHeight);
                     var scaleY = primaryBounds.Height / Math.Max(1.0f, vtsHeight);
                     outlineOffsetX *= scaleX;
                     outlineOffsetY *= scaleY;

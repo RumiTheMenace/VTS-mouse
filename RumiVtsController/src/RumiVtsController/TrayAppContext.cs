@@ -2039,13 +2039,18 @@ namespace RumiVtsController
                     return;
                 }
 
-                var windowWidth = _hasWindowSize ? _windowWidth : clientBounds.Width;
-                var windowHeight = _hasWindowSize ? _windowHeight : clientBounds.Height;
+                // Use Win32 client bounds for center so it's in the same pixel space as the cursor.
+                var windowWidth = clientBounds.Width;
+                var windowHeight = clientBounds.Height;
                 if (windowWidth <= 0 || windowHeight <= 0)
                 {
-                    windowWidth = clientBounds.Width;
-                    windowHeight = clientBounds.Height;
+                    windowWidth = _hasWindowSize ? _windowWidth : 0;
+                    windowHeight = _hasWindowSize ? _windowHeight : 0;
                 }
+
+                // vtsHeight used for model position Y scale (VTS coordinate system)
+                var vtsHeight = _hasWindowSize ? _windowHeight : windowHeight;
+                if (vtsHeight <= 0) vtsHeight = windowHeight;
 
                 var screenCenterX = clientBounds.Left + windowWidth / 2.0f;
                 var screenCenterY = clientBounds.Top + windowHeight / 2.0f;
@@ -2054,7 +2059,7 @@ namespace RumiVtsController
 
                 var modelOffsetY = ModelMath.PositionToPixelsY(
                     -modelInfo.Value.PositionY.Value,
-                    windowHeight);
+                    vtsHeight);
                 var offsetY = targetOffsetY - modelOffsetY;
 
                 _config.Model.OffsetY = offsetY;
